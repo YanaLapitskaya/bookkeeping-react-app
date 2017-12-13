@@ -2,6 +2,6 @@ import * as React from 'react'
 
 export default class Header extends React.Component{
     render() {
-        return (<h1>Header</h1>)
+        return (<h1>Bookkeeping Application</h1>)
     }
 }
