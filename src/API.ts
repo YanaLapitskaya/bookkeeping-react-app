@@ -38,25 +38,11 @@ export default class API {
 }
 
 function putOrPost(method: string, path: string, payload: Object): Promise<{}> {
-    const fetchPromise = new Promise((resolve, reject) => {
-        //noinspection TypeScriptUnresolvedFunction
-        return fetch(`${HOST}${path}`, {
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(res => {
-            return res.json();
-        })
-        .then(data => {
-            resolve(data);
-        })
-        .catch(err => {
-            reject(err);
-        });
-    });
-
-    return fetchPromise;
+    return fetch(`${HOST}${path}`, {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+    })
 }

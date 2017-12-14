@@ -1,71 +1,83 @@
 import * as React from 'react';
-//import API from '../API';
+import API from '../API';
 
-export default class Header extends React.Component {
-    constructor(props: any) {
+interface LoginState {
+    email: string;
+    password: string;
+    error: string;
+}
+export default class Login extends React.Component<{}, LoginState> {
+    constructor(props: {}) {
         super(props);
         this.state = {
-            email: '',
-            password: ''
+            email: 'yana@gmail.com',
+            password: 'yana',
+            error: ''
         };
     }
-    login() {
-        const user = {
-            email: 'yana@gmail.com',
-            password: 'yana'
-        };
-        //let form = new FormData(document.getElementById('form') as HTMLFormElement);
 
-        fetch('http://localhost:8080/api/v1/auth/login',
-              {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body:  JSON.stringify(user)
-            })
-            .then(function(res) {
-                return res.json();
+    handleChange(stateName: String, e: any) {
+        let target = e.target.value;
+        if (stateName === 'email') {
+            this.setState({email: target});
+        } else {
+            this.setState({password: target});
+        }
+    }
+
+    handleClick() {
+        let user = {
+            email: this.state.email,
+            password: this.state.password
+        };
+
+        API.post('/api/v1/auth/login', user)
+            .then((res: any) => {
+                if (res.status === 200) {
+                    alert('hello');
+                }
+                else if (res.status === 400) {
+                    this.setState({error: 'User not found'});
+                } else {
+                    console.log(res);
+                }
             })
             .catch((e) => {
                 console.log(e);
             });
-
-        //API.get('/api/v1/auth/login').then((res) => alert(res)).catch((e) => alert(e));
     }
     render() {
         return (
-            <div className="container">
-            <div className="row">
-                <div className="span12">
-                <form className="htmlForm-horizontal" id="loginForm" onSubmit={this.login}>
-                    <fieldset>
-                        <div id="legend">
-                    <legend className="">Login</legend>
+            <div className="wrapper">
+                <div className="form-signin">
+                    <h2 className="form-signin-heading">Please login</h2>
+                    {this.state.error &&
+                        <div className="alert alert-danger">
+                            {this.state.error}.
                         </div>
-                        <div className="control-group">
-                    <label className="control-label"  htmlFor="username">Username</label>
-                        <div className="controls">
-                    <input type="text" id="email" name="email" placeholder="Email" className="input-xlarge" /*onChange={(event: any,newValue:String) => this.setState({email:newValue})*//>
-                        </div>
-                        </div>
-                        <div className="control-group">
-                    <label className="control-label" htmlFor="password">Password</label>
-                        <div className="controls">
-                    <input type="password" id="password" name="password" placeholder="" className="input-xlarge"/>
-                        </div>
-                        </div>
-                        <div className="control-group">
-                    <div className="controls">
-                    <button className="btn btn-success">Login</button>
-                        </div>
-                        </div>
-                        </fieldset>
-                    </form>
+                    }
+                    <input type="text"
+                           className="form-control"
+                           name="email"
+                           placeholder="Email Address"
+                           required={true}
+                           onChange={(e) => {this.handleChange('email', e); }}
+                    />
+                    <input type="password"
+                           className="form-control"
+                           name="password"
+                           placeholder="Password"
+                           required={true}
+                           onChange={(e) => {this.handleChange('password', e); }}
+                    />
+                    <button className="btn btn-lg btn-primary btn-block"
+                            type="submit"
+                            onClick={() => {this.handleClick(); }}
+                    >
+                        Login
+                    </button>
                 </div>
-             </div>
-         </div>
+            </div>
         );
-
     }
 }
