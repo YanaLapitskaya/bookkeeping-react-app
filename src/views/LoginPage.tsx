@@ -1,17 +1,25 @@
 import * as React from 'react';
 import API from '../API';
+import {withRouter} from 'react-router';
+import {Link} from 'react-router-dom';
+
+interface LoginProps {
+    match: any;
+    location: any;
+    history: any;
+}
 
 interface LoginState {
     email: string;
     password: string;
     error: string;
 }
-export default class Login extends React.Component<{}, LoginState> {
-    constructor(props: {}) {
-        super(props);
+class Login extends React.Component<LoginProps, LoginState> {
+    constructor(props: any, context: any) {
+        super(props, context);
         this.state = {
-            email: 'yana@gmail.com',
-            password: 'yana',
+            email: '',
+            password: '',
             error: ''
         };
     }
@@ -34,7 +42,8 @@ export default class Login extends React.Component<{}, LoginState> {
         API.post('/api/v1/auth/login', user)
             .then((res: any) => {
                 if (res.status === 200) {
-                    alert('hello');
+                    console.log(this.props.history);
+                    this.props.history.push('/dashboard');
                 }
                 else if (res.status === 400) {
                     this.setState({error: 'User not found'});
@@ -46,6 +55,7 @@ export default class Login extends React.Component<{}, LoginState> {
                 console.log(e);
             });
     }
+
     render() {
         return (
             <div className="wrapper">
@@ -71,13 +81,16 @@ export default class Login extends React.Component<{}, LoginState> {
                            onChange={(e) => {this.handleChange('password', e); }}
                     />
                     <button className="btn btn-lg btn-primary btn-block"
-                            type="submit"
                             onClick={() => {this.handleClick(); }}
                     >
                         Login
                     </button>
                 </div>
+                <Link to="/signup">Sign up a new account</Link>
+                <Link to="/forgot">Forgot your password?</Link>
             </div>
         );
     }
 }
+
+export default withRouter(Login);
