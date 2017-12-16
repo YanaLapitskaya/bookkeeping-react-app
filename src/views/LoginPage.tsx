@@ -15,8 +15,8 @@ interface LoginState {
     error: string;
 }
 class Login extends React.Component<LoginProps, LoginState> {
-    constructor(props: any, context: any) {
-        super(props, context);
+    constructor(props: any) {
+        super(props);
         this.state = {
             email: '',
             password: '',

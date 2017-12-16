@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Transaction } from '../models/Transaction';
+//  import { Transaction } from '../models/Transaction';
 
 interface FormProps {
     onTranAdd: Function;
@@ -27,11 +27,11 @@ export default class TransactionForm extends React.Component<FormProps, FormStat
     }
 
     handleAdd() {
-        let tran = new Transaction(
-            this.state.title,
-            this.state.amount,
-            this.state.type
-        );
+        let tran = {
+            title: this.state.title,
+            amount: this.state.amount,
+            type: this.state.type
+        };
         this.props.onTranAdd(tran);
     }
 

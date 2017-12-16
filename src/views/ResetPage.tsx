@@ -33,7 +33,7 @@ class ResetPage extends React.Component<ResetProps, ResetState> {
             password: this.state.password,
         };
 
-        API.post(`/api/v1/auth/reset/{token}`, password)
+        API.post(`/api/v1/auth/reset/${this.props.token}`, password)
             .then((res: any) => {
                 if (res.status === 200) {
                     alert('Password was updated');
