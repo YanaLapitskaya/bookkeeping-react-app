@@ -17,17 +17,28 @@ export default class TransactionPanel extends React.Component<{}, PanelState> {
     }
 
     componentWillMount() {
-        API.get('/api/v1/transaction/all').then((trans: Array<Transaction>) => {
-            this.setState({ trans });
+        API.get('/api/v1/transaction/all').then((data: any) => {
+            let trans = data.transactions;
+            trans = trans.map((tr: any) => {return new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date); });
+            this.setState({trans: trans});
         });
     }
 
     handleTranAdd(tran: Transaction) {
-        /*API.put('/todos', tran).then(newTrans: Transaction => {
-            this.setState({
-                trans: [...this.state.trans, newTrans]
+        API.put('/api/v1/transaction', tran).then((res: any) => {
+                if (res.status < 400) {
+                    return res.json();
+                } else {
+                    throw {code: res.status.toString()};
+                }
             })
-        })*/
+            .then(data => {
+                let tr = data.transaction;
+                console.log(tr)
+                this.setState({
+                    trans: [...this.state.trans, new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date)]
+                });
+            });
     }
 
     render() {
@@ -36,6 +47,6 @@ export default class TransactionPanel extends React.Component<{}, PanelState> {
                 <TransactionForm onTranAdd={(tran: Transaction) => this.handleTranAdd(tran)}/>
                 <TransactionTable trans={this.state.trans}/>
             </div>
-        )
+        );
     }
 }

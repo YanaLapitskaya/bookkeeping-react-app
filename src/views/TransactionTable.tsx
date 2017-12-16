@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Transaction } from '../models/Transaction';
+import {Link} from 'react-router-dom';
 
 interface TableProps {
     trans: Array<Transaction>;
@@ -40,7 +41,11 @@ class TransactionRow extends React.Component<RowProps, {}> {
             <tr>
                 <th scope="row">{this.props.tran.id}</th>
                 <td>{this.props.tran.date}</td>
-                <td>{this.props.tran.title}</td>
+                <td>
+                    <Link to={`/transaction/${this.props.tran.id}`}>
+                        {this.props.tran.title}
+                    </Link>
+                </td>
                 <td>{this.props.tran.amount}</td>
                 <td>{this.props.tran.type}</td>
             </tr>

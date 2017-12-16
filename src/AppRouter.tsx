@@ -6,6 +6,8 @@ import ForgotPasswordPage from './views/ForgotPasswordPage';
 import LoginPage from './views/LoginPage';
 import SignupPage from './views/SignupPage';
 import ResetPage from './views/ResetPage';
+import TransactionDetailsPage from './views/TransactionDetailsPage';
+import TransactionEditPage from './views/TransactionEditPage';
 
 export default class AppRouter extends React.Component {
     constructor(props: {}) {
@@ -26,12 +28,30 @@ export default class AppRouter extends React.Component {
                         path={`/reset/:token`}
                         render={
                             ({match: {params: {token}}}) => {
-                                return <ResetPage token={token} />
+                                return <ResetPage token={token} match={null} location={null} history={null} />
                             }
                         }
                     />
 
                     <Route exact={true} path="/dashboard" render={() => <DashboardPage />} />
+                    <Route
+                        exact={true}
+                        path={`/transaction/:id`}
+                        render={
+                            ({match: {params: {id}}}) => {
+                                return <TransactionDetailsPage id={id} match={null} location={null} history={null} />
+                            }
+                        }
+                    />
+                    <Route
+                        exact={true}
+                        path={`/transaction/:id/edit`}
+                        render={
+                            ({match: {params: {id}}}) => {
+                                return <TransactionEditPage id={id} match={null} location={null} history={null} />
+                            }
+                        }
+                    />
                     <Route exact={true} path="*" render={() =>  <h1>404 not found</h1>} />
                 </Switch>
             </BrowserRouter>
