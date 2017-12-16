@@ -3,12 +3,14 @@ export class Transaction {
     title: string;
     amount: number;
     type: string;
-    date: number;
+    date: Date = new Date();
 
-    constructor(title: string, amount: number, type: string) {
+    constructor(id: number, title: string, amount: number, type: string, date: Date) {
+        this.id = id;
         this.title = title;
         this.amount = amount;
         this.type = type;
+        this.date = date;
     }
 
 }
