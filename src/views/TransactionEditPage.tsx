@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {Transaction} from '../models/Transaction';
+import { Transaction } from '../models/Transaction';
 import API from '../API';
+import { withRouter } from 'react-router';
 
 interface EditProps {
     id: number;
@@ -11,7 +12,7 @@ interface EditProps {
 interface EditState {
     tran: Transaction | undefined;
 }
-export default class TransactionEditPage extends React.Component<EditProps,EditState> {
+class TransactionEditPage extends React.Component<EditProps, EditState> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -22,20 +23,74 @@ export default class TransactionEditPage extends React.Component<EditProps,EditS
     componentWillMount() {
         API.get(`/api/v1/transaction/${this.props.id}`)
             .then((data: any) => {
-                let tranRs = data.transactions[0];
+                let tranRs = data.transaction;
                 let tran = new Transaction(tranRs._id, tranRs.title, tranRs.amount, tranRs.type, tranRs.date);
                 this.setState({tran: tran});
             });
+    }
+
+    handleChange(name: String, e: any) {
+        if (!this.state.tran) { return; }
+
+        let target = e.target.value;
+        let newTran = this.state.tran;
+        name === 'title' ? (newTran.title = target)
+            : (name === 'amount' ? newTran.amount = target : newTran.type = target);
+        this.setState({tran: newTran});
+    }
+
+    handleClick() {
+        if (!this.state.tran) { return; }
+        let tran = {
+            title: this.state.tran.title,
+            amount: this.state.tran.amount,
+            type: this.state.tran.type
+        };
+        API.post(`/api/v1/transaction/${this.props.id}`, tran)
+            .then((res: any) => {
+                if (res.status === 200) {
+                    alert('transaction was undated');
+                    this.props.history.push('/dashboard');
+                }
+            })
+            .catch((err) => {console.log(err); });
     }
 
     render() {
         if (this.state.tran) {
             return (
                 <div>
-                    <h3>Edit transaction {this.state.tran.id}</h3>
+                    <h3>Edit transaction details</h3>
+                    <input type="text"
+                           className="form-control"
+                           name="title"
+                           value={this.state.tran.title}
+                           required={true}
+                           onChange={(e) => {this.handleChange('title', e); }}
+                    />
+                    <input type="text"
+                           className="form-control"
+                           name="amount"
+                           value={this.state.tran.amount}
+                           required={true}
+                           onChange={(e) => {this.handleChange('amount', e); }}
+                    />
+                    <input type="text"
+                           className="form-control"
+                           name="type"
+                           value={this.state.tran.type}
+                           required={true}
+                           onChange={(e) => {this.handleChange('type', e); }}
+                    />
+                    <button className="btn btn-lg btn-primary btn-block"
+                            onClick={() => {this.handleClick(); }}
+                    >
+                        Save
+                    </button>
                 </div>
             );
-        }
-        else return <p>hello</p>;
+        } else { return <p>Transaction not found</p>; }
     }
 }
+
+export default withRouter(TransactionEditPage);
