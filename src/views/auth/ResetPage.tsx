@@ -1,6 +1,6 @@
 import * as React from 'react';
-import API from '../API';
-import {withRouter} from 'react-router';
+import API from '../../API';
+import { withRouter } from 'react-router';
 
 interface ResetProps {
     token: string;
@@ -28,7 +28,7 @@ class ResetPage extends React.Component<ResetProps, ResetState> {
         this.setState({password: target});
     }
 
-    handleClick(){
+    handleClick() {
         let password = {
             password: this.state.password,
         };
@@ -38,8 +38,7 @@ class ResetPage extends React.Component<ResetProps, ResetState> {
                 if (res.status === 200) {
                     alert('Password was updated');
                     this.props.history.push('/dashboard');
-                }
-                else if (res.status === 400) {
+                } else if (res.status === 400) {
                     this.setState({error: 'Password reset token is invalid or has expired'});
                 } else {
                     console.log(res);
@@ -59,14 +58,16 @@ class ResetPage extends React.Component<ResetProps, ResetState> {
                         {this.state.error}.
                     </div>
                 }
-                <input type="password"
+                <input
+                    type="password"
                     className="form-control"
                     name="password"
                     placeholder="New password"
                     required={true}
                     onChange={(e) => {this.handleChange(e); }}
                 />
-                <button className="btn btn-lg btn-primary btn-block"
+                <button
+                    className="btn btn-lg btn-primary btn-block"
                     onClick={() => {this.handleClick(); }}
                 >
                     Login

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import API from '../API';
-import {withRouter} from 'react-router';
-import {Link} from 'react-router-dom';
+import API from '../../API';
+import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface LoginProps {
     match: any;
@@ -44,8 +44,7 @@ class Login extends React.Component<LoginProps, LoginState> {
                 if (res.status === 200) {
                     console.log(this.props.history);
                     this.props.history.push('/dashboard');
-                }
-                else if (res.status === 400) {
+                } else if (res.status === 400) {
                     this.setState({error: 'User not found'});
                 } else {
                     console.log(res);
@@ -66,22 +65,25 @@ class Login extends React.Component<LoginProps, LoginState> {
                             {this.state.error}.
                         </div>
                     }
-                    <input type="text"
-                           className="form-control"
-                           name="email"
-                           placeholder="Email Address"
-                           required={true}
-                           onChange={(e) => {this.handleChange('email', e); }}
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="email"
+                        placeholder="Email Address"
+                        required={true}
+                        onChange={(e) => {this.handleChange('email', e); }}
                     />
-                    <input type="password"
-                           className="form-control"
-                           name="password"
-                           placeholder="Password"
-                           required={true}
-                           onChange={(e) => {this.handleChange('password', e); }}
+                    <input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        placeholder="Password"
+                        required={true}
+                        onChange={(e) => {this.handleChange('password', e); }}
                     />
-                    <button className="btn btn-lg btn-primary btn-block"
-                            onClick={() => {this.handleClick(); }}
+                    <button
+                        className="btn btn-lg btn-primary btn-block"
+                        onClick={() => {this.handleClick(); }}
                     >
                         Login
                     </button>

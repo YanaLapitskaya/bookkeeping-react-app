@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Transaction } from '../models/Transaction';
-import API from '../API';
+import Transaction from '../../models/Transaction';
+import API from '../../API';
 import { withRouter } from 'react-router';
 
 interface EditProps {
@@ -23,8 +23,8 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
     componentWillMount() {
         API.get(`/api/v1/transaction/${this.props.id}`)
             .then((data: any) => {
-                let tranRs = data.transaction;
-                let tran = new Transaction(tranRs._id, tranRs.title, tranRs.amount, tranRs.type, tranRs.date);
+                let trRs = data.transaction;
+                let tran = new Transaction(trRs._id, trRs.title, trRs.amount, trRs.type, trRs.date, trRs.card);
                 this.setState({tran: tran});
             });
     }
@@ -61,29 +61,33 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
             return (
                 <div>
                     <h3>Edit transaction details</h3>
-                    <input type="text"
-                           className="form-control"
-                           name="title"
-                           value={this.state.tran.title}
-                           required={true}
-                           onChange={(e) => {this.handleChange('title', e); }}
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="title"
+                        value={this.state.tran.title}
+                        required={true}
+                        onChange={(e) => {this.handleChange('title', e); }}
                     />
-                    <input type="text"
-                           className="form-control"
-                           name="amount"
-                           value={this.state.tran.amount}
-                           required={true}
-                           onChange={(e) => {this.handleChange('amount', e); }}
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="amount"
+                        value={this.state.tran.amount}
+                        required={true}
+                        onChange={(e) => {this.handleChange('amount', e); }}
                     />
-                    <input type="text"
-                           className="form-control"
-                           name="type"
-                           value={this.state.tran.type}
-                           required={true}
-                           onChange={(e) => {this.handleChange('type', e); }}
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="type"
+                        value={this.state.tran.type}
+                        required={true}
+                        onChange={(e) => {this.handleChange('type', e); }}
                     />
-                    <button className="btn btn-lg btn-primary btn-block"
-                            onClick={() => {this.handleClick(); }}
+                    <button
+                        className="btn btn-lg btn-primary btn-block"
+                        onClick={() => {this.handleClick(); }}
                     >
                         Save
                     </button>

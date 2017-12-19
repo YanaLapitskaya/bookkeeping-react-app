@@ -1,6 +1,6 @@
 import * as React from 'react';
-import API from '../API';
-import {withRouter} from 'react-router';
+import API from '../../API';
+import { withRouter } from 'react-router';
 
 interface SignupProps {
     match: any;
@@ -8,7 +8,7 @@ interface SignupProps {
     history: any;
 }
 
-interface SignupState{
+interface SignupState {
     email: string;
     password: string;
     confirmPassword: string;
@@ -33,10 +33,9 @@ class Signup extends React.Component<SignupProps, SignupState> {
         } else if (stateName === 'password') {
             this.setState({password: target});
         } else {
-            this.setState({confirmPassword: target})
+            this.setState({confirmPassword: target});
         }
     }
-
 
     handleClick(e: any) {
         let user = {
@@ -49,8 +48,7 @@ class Signup extends React.Component<SignupProps, SignupState> {
             .then((res: any) => {
                 if (res.status === 200) {
                     this.props.history.push('/dashboard');
-                }
-                else if (res.status === 400) {
+                } else if (res.status === 400) {
                     this.setState({error: 'Account with that email address already exists'});
                 } else {
                     console.log(res);
@@ -70,31 +68,35 @@ class Signup extends React.Component<SignupProps, SignupState> {
                 {this.state.error}.
                 </div>
             }
-            <input type="text"
+            <input
+                type="text"
                 className="form-control"
                 name="email"
                 placeholder="Email Address"
                 required={true}
                 onChange={(e) => {this.handleChange('email', e); }}
             />
-            <input type="password"
+            <input
+                type="password"
                 className="form-control"
                 name="password"
                 placeholder="Password"
                 required={true}
                 onChange={(e) => {this.handleChange('password', e); }}
             />
-            <input type="password"
-                   className="form-control"
-                   name="confirmPassword"
-                   placeholder="Confirm password"
-                   required={true}
-                   onChange={(e) => {this.handleChange('confirmPassword', e); }}
+            <input
+                type="password"
+                className="form-control"
+                name="confirmPassword"
+                placeholder="Confirm password"
+                required={true}
+                onChange={(e) => {this.handleChange('confirmPassword', e); }}
             />
-            <button className="btn btn-lg btn-primary btn-block"
+            <button
+                className="btn btn-lg btn-primary btn-block"
                 onClick={(e) => {this.handleClick(e); }}
             >
-            Login
+                Login
             </button>
         </div>
         );

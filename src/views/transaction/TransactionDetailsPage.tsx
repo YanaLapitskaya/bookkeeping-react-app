@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Transaction } from '../models/Transaction';
-import API from '../API';
+import Transaction from '../../models/Transaction';
+import API from '../../API';
 import { withRouter } from 'react-router';
 
 interface DetailsProps {
@@ -23,8 +23,8 @@ class TransactionDetails extends React.Component<DetailsProps, DetailsState> {
     componentWillMount() {
         API.get(`/api/v1/transaction/${this.props.id}`)
             .then((data: any) => {
-                let tranRs = data.transactions[0];
-                let tran = new Transaction(tranRs._id, tranRs.title, tranRs.amount, tranRs.type, tranRs.date);
+                let trRs = data.transaction;
+                let tran = new Transaction(trRs._id, trRs.title, trRs.amount, trRs.type, trRs.date, trRs.card);
                 this.setState({tran: tran});
         });
     }

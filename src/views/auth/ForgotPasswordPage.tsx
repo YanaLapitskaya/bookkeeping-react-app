@@ -1,5 +1,5 @@
 import * as React from 'react';
-import API from '../API';
+import API from '../../API';
 
 interface ResetState {
     email: string;
@@ -29,8 +29,7 @@ export default class ForgotPasswordPage extends React.Component<{}, ResetState> 
             .then((res: any) => {
                 if (res.status === 200) {
                     alert('message was sent');
-                }
-                else if (res.status === 400) {
+                } else if (res.status === 400) {
                     this.setState({error: 'Account with that email address does not exist'});
                 } else {
                     console.log(res);
@@ -50,15 +49,17 @@ export default class ForgotPasswordPage extends React.Component<{}, ResetState> 
                     {this.state.error}.
                 </div>
                 }
-                <input type="text"
-                       className="form-control"
-                       name="email"
-                       placeholder="Email Address"
-                       required={true}
-                       onChange={(e) => {this.handleChange(e); }}
+                <input
+                    type="text"
+                    className="form-control"
+                    name="email"
+                    placeholder="Email Address"
+                    required={true}
+                    onChange={(e) => {this.handleChange(e); }}
                 />
-                <button className="btn btn-lg btn-primary btn-block"
-                        onClick={() => {this.handleClick(); }}
+                <button
+                    className="btn btn-lg btn-primary btn-block"
+                    onClick={() => {this.handleClick(); }}
                 >
                     Login
                 </button>
