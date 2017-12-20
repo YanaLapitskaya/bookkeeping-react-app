@@ -39,8 +39,8 @@ export default class AppRouter extends React.Component {
                     />
 
                     <Route exact={true} path="/dashboard" render={() => <DashboardPage />} />
+                    <Redirect exact={true} from="/" to="/login" />
                     <Route exact={true} path="*" render={() =>  <h1>404 not found</h1>} />
-                    <Redirect from="/" to="login" />
                 </Switch>
             </BrowserRouter>
         );
