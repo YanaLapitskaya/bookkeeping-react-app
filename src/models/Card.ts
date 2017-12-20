@@ -1,4 +1,4 @@
-export default class Transaction {
+export default class Card {
     id: string;
     number: string;
     paymentSystem: string;
