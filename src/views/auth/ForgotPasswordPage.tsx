@@ -42,7 +42,7 @@ export default class ForgotPasswordPage extends React.Component<{}, ResetState> 
 
     render() {
         return (
-            <div className="form-signin">
+            <div className="wrapper form-signin">
                 <h2 className="form-signin-heading">Enter your email</h2>
                 {this.state.error &&
                 <div className="alert alert-danger">
@@ -61,7 +61,7 @@ export default class ForgotPasswordPage extends React.Component<{}, ResetState> 
                     className="btn btn-lg btn-primary btn-block"
                     onClick={() => {this.handleClick(); }}
                 >
-                    Login
+                    Send reset message
                 </button>
             </div>
         );

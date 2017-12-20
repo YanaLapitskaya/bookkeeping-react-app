@@ -54,10 +54,11 @@ export default class DashboardPage extends React.Component<{}, DashboardState> {
         this.changeCardBalance(tran);
     }
 
-    changeCardBalance(tran: Transaction){
+    changeCardBalance(tran: Transaction) {
         let card = this.state.cards.filter((c: any) => {return c.id === tran.card; })[0];
+        if (!card) return;
         let newCard = {
-            amount: card.amount - tran.amount
+            amount: card.amount + tran.amount
         };
         API.post(`/api/v1/card/${tran.card}`, newCard).then((res: any) => {
             if (res.status === 200) {
@@ -66,9 +67,9 @@ export default class DashboardPage extends React.Component<{}, DashboardState> {
                 throw {code: res.status.toString()};
             }
         }).then((data) => {
-            let resCard = data.card;
+            let resCard = new Card(data.card._id, data.card.number, data.card.paymentSystem, data.card.amount);
             let newCards = this.state.cards.map((c: Card) => {
-                return (c.id === resCard._id) ? resCard : c;
+                return (c.id === resCard.id) ? resCard : c;
             });
             this.setState({cards: newCards});
         });

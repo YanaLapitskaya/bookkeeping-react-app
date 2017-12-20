@@ -61,7 +61,7 @@ class Signup extends React.Component<SignupProps, SignupState> {
 
     render() {
         return (
-        <div className="form-signin">
+        <div className="wrapper">
             <h2 className="form-signin-heading">Create a new account</h2>
             {this.state.error &&
             <div className="alert alert-danger">

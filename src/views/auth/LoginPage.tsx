@@ -58,38 +58,42 @@ class Login extends React.Component<LoginProps, LoginState> {
     render() {
         return (
             <div className="wrapper">
-                <div className="form-signin">
-                    <h2 className="form-signin-heading">Please login</h2>
-                    {this.state.error &&
-                        <div className="alert alert-danger">
-                            {this.state.error}.
-                        </div>
-                    }
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="email"
-                        placeholder="Email Address"
-                        required={true}
-                        onChange={(e) => {this.handleChange('email', e); }}
-                    />
-                    <input
-                        type="password"
-                        className="form-control"
-                        name="password"
-                        placeholder="Password"
-                        required={true}
-                        onChange={(e) => {this.handleChange('password', e); }}
-                    />
-                    <button
-                        className="btn btn-lg btn-primary btn-block"
-                        onClick={() => {this.handleClick(); }}
-                    >
-                        Login
-                    </button>
+                <h2 className="form-signin-heading">Please login</h2>
+                {this.state.error &&
+                <div className="alert alert-danger">
+                    {this.state.error}.
                 </div>
-                <Link to="/signup">Sign up a new account</Link>
-                <Link to="/forgot">Forgot your password?</Link>
+                }
+                <input
+                    type="text"
+                    className="form-control"
+                    name="email"
+                    placeholder="Email Address"
+                    required={true}
+                    onChange={(e) => {
+                        this.handleChange('email', e);
+                    }}
+                />
+                <input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    placeholder="Password"
+                    required={true}
+                    onChange={(e) => {
+                        this.handleChange('password', e);
+                    }}
+                />
+                <button
+                    className="btn btn-lg btn-primary btn-block"
+                    onClick={() => {
+                        this.handleClick();
+                    }}
+                >
+                    Login
+                </button>
+                <p><Link to="/signup">Sign up a new account</Link></p>
+                <p><Link to="/forgot">Forgot your password?</Link></p>
             </div>
         );
     }

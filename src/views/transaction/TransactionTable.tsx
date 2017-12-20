@@ -21,9 +21,10 @@ export default class TransactionTable extends React.Component<TableProps, {}> {
                         <th scope="col">#</th>
                         <th scope="col">Date</th>
                         <th scope="col">Title</th>
-                        <th scope="col">Amount</th>
                         <th scope="col">Type</th>
+                        <th scope="col">Amount</th>
                         <th scope="col">Card</th>
+                        <th scope="col">Card balance</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,14 +45,16 @@ interface RowProps {
 class TransactionRow extends React.Component<RowProps, {}> {
     render() {
         let card = this.props.cards.filter((c: any) => {return c.id === this.props.tran.card; })[0];
+        let classTr = this.props.tran.amount < 0 ? 'table-danger' : 'table-success';
         return (
-            <tr>
+            <tr className={classTr}>
                 <th scope="row">{this.props.num}</th>
                 <td>{this.props.tran.date}</td>
                 <td>{this.props.tran.title}</td>
-                <td>{this.props.tran.amount}</td>
                 <td>{this.props.tran.type}</td>
-                <td>{card && card.paymentSystem+': '+card.number}</td>
+                <td>{this.props.tran.amount > 0 ? '+' : ''}{this.props.tran.amount}</td>
+                <td>{card && card.paymentSystem + ': ' + card.number}</td>
+                <td>{card && card.amount}</td>
                 <td>
                     <Link to={`/transaction/${this.props.tran.id}`}>
                         Details >

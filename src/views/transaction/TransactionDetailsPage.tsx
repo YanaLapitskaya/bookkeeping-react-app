@@ -2,6 +2,7 @@ import * as React from 'react';
 import Transaction from '../../models/Transaction';
 import API from '../../API';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface DetailsProps {
     id: number;
@@ -59,8 +60,14 @@ class TransactionDetails extends React.Component<DetailsProps, DetailsState> {
                         <p>Type: {tran.type}</p>
                         <p>Date: {tran.date}</p>
                     </div>
-                    <button onClick={() => this.onEditClick()}>Edit</button>
-                    <button onClick={() => this.onDeleteClick()}>Delete</button>
+                    {this.state.tran !== undefined ? (
+                        <button>
+                                <Link to={`/transaction/${this.state.tran.id}/edit`}>Edit</Link>
+                        </button>
+                        ) : null}
+                    <button onClick={() => this.onDeleteClick()}>
+                        <a href="#">Delete</a>
+                    </button>
                 </div>
             );
         } else {

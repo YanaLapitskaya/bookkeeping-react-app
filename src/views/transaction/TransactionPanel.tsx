@@ -15,16 +15,15 @@ export default class TransactionPanel extends React.Component<PanelProps, {}> {
     render() {
         return (
             <div>
-                <div>
-                    <ul className="nav nav-pills">
-                        <li role="presentation" className="active"><a href="#">Transactions</a></li>
-                        <li role="presentation">
-                            <Link to={`/cards`}>
-                                Payment cards
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
+                <ul className="nav nav-pills">
+                    <li className="nav-item"><a className="nav-link active" href="#">Transactions</a></li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to={`/cards`}>
+                            Payment cards
+                        </Link>
+                    </li>
+                </ul>
+
                 <TransactionForm
                     cards={this.props.cards}
                     onTranAdd={(tran: Transaction) => this.props.onTranAdd(tran)}

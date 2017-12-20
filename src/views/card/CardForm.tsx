@@ -25,7 +25,8 @@ export default class CardForm extends React.Component<FormProps, FormState> {
                 : this.setState({paymentSystem: target}) );
     }
 
-    handleAdd() {
+    handleAdd(e: any) {
+        e.preventDefault();
         let card = {
             number: this.state.number,
             paymentSystem: this.state.paymentSystem,
@@ -37,47 +38,60 @@ export default class CardForm extends React.Component<FormProps, FormState> {
     render() {
         return (
             <div className="form-row" style={styles.form}>
-                <div className="form-group col-md-3">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Number"
-                        id="inputNumber"
-                        onChange={(e) => this.handleChange('number', e)}
-                    />
-                </div>
-                <div className="form-group col-md-3" onChange={(e) => this.handleChange('system', e)}>
-                    <select id="inputSystem" className="form-control">
-                        <option>Choose payment system</option>
-                        <option>MasterCard</option>
-                        <option>VISA</option>
-                        <option>БелКарт</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-                <div className="form-group col-md-3">
-                    <input
-                        type="number"
-                        className="form-control"
-                        placeholder="Amount"
-                        id="inputAmount"
-                        onChange={(e) => this.handleChange('amount', e)}
-                    />
-                </div>
-                <button
-                    className="form-group col-md-3 btn btn-primary"
-                    onClick={() => this.handleAdd()}
-                >
-                    Add payment card
-                </button>
+                <form>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-3">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Number"
+                                    id="inputNumber"
+                                    onChange={(e) => this.handleChange('number', e)}
+                                />
+                            </div>
+                            <div className="col-md-3">
+                                <select
+                                    id="inputSystem"
+                                    className="form-control"
+                                    onChange={(e) => this.handleChange('system', e)}
+                                >
+                                    <option>Choose payment system</option>
+                                    <option>MasterCard</option>
+                                    <option>VISA</option>
+                                    <option>БелКарт</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div className="col-md-2">
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    placeholder="Amount"
+                                    id="inputAmount"
+                                    onChange={(e) => this.handleChange('amount', e)}
+                                />
+                            </div>
+                            <div className="col-md-3">
+                                <button
+                                    className="form-group btn btn-primary"
+                                    onClick={(e) => this.handleAdd(e)}
+                                >
+                                    Add payment card
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-    );
+        );
     }
 }
 const styles = {
     form: {
         height: '55px',
         padding: '10px 20px',
-        background: '#f6f6f6'
+        background: '#f6f6f6',
+        marginBottom: '10px'
     }
 };

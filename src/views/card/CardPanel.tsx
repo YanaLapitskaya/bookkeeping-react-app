@@ -12,18 +12,17 @@ export default class CardPanel extends React.Component<PanelProps, {}> {
     render() {
         return (
             <div>
-                <div>
-                    <ul className="nav nav-pills">
-                        <li role="presentation">
-                            <Link to={`/dashboard`}>
-                                Transactions
-                            </Link>
-                        </li>
-                        <li role="presentation" className="active">
-                            <a href="#">Payment cards</a>
-                        </li>
-                    </ul>
-                </div>
+                <ul className="nav nav-pills">
+                    <li className="nav-item">
+                        <Link className="nav-link" to={`/dashboard`}>
+                            Transactions
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link active" href="#">Payment cards</a>
+                    </li>
+                </ul>
+
                 <CardForm  onCardAdd={(card: Card) => this.props.onCardAdd(card)}/>
                 <CardTable cards={this.props.cards}/>
             </div>
