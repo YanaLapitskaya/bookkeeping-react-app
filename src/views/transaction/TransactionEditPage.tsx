@@ -11,12 +11,17 @@ interface EditProps {
 }
 interface EditState {
     tran: Transaction | undefined;
+    file: string;
+    imagePreviewUrl: string;
+
 }
 class TransactionEditPage extends React.Component<EditProps, EditState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            tran: undefined
+            tran: undefined,
+            file: '',
+            imagePreviewUrl: ''
         };
     }
 
@@ -39,12 +44,29 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
         this.setState({tran: newTran});
     }
 
-    handleClick() {
+    handleImageChange(e: any) {
+        e.preventDefault();
+
+        let reader = new FileReader();
+        let file = e.target.files[0];
+
+        reader.onloadend = () => {
+            this.setState({
+                file: file,
+                imagePreviewUrl: reader.result
+            });
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    handleClick(e: any) {
         if (!this.state.tran) { return; }
         let tran = {
             title: this.state.tran.title,
             amount: this.state.tran.amount,
-            type: this.state.tran.type
+            type: this.state.tran.type,
+            file: this.state.file
         };
         API.post(`/api/v1/transaction/${this.props.id}`, tran)
             .then((res: any) => {
@@ -85,9 +107,10 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         required={true}
                         onChange={(e) => {this.handleChange('type', e); }}
                     />
+                    <input type="file" onChange={(e) => this.handleImageChange(e)} />
                     <button
                         className="btn btn-lg btn-primary btn-block"
-                        onClick={() => {this.handleClick(); }}
+                        onClick={(e) => {this.handleClick(e); }}
                     >
                         Save
                     </button>
