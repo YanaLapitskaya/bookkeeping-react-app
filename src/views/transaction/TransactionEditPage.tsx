@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 
 interface EditProps {
     id: number;
+    onTranEdit: Function;
     match: any;
     location: any;
     history: any;
@@ -61,21 +62,9 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
     }
 
     handleClick(e: any) {
-        if (!this.state.tran) { return; }
-        let tran = {
-            title: this.state.tran.title,
-            amount: this.state.tran.amount,
-            type: this.state.tran.type,
-            file: this.state.file
-        };
-        API.post(`/api/v1/transaction/${this.props.id}`, tran)
-            .then((res: any) => {
-                if (res.status === 200) {
-                    alert('transaction was undated');
-                    this.props.history.push('/dashboard');
-                }
-            })
-            .catch((err) => {console.log(err); });
+        e.preventDefault();
+
+        this.props.onTranEdit(this.state.tran, this.props.history);
     }
 
     render() {

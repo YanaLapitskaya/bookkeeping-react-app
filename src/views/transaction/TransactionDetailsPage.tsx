@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 interface DetailsProps {
     id: number;
+    onTranDelete: Function;
     match: any;
     location: any;
     history: any;
@@ -30,21 +31,8 @@ class TransactionDetails extends React.Component<DetailsProps, DetailsState> {
         });
     }
 
-    onEditClick() {
-        if (this.state.tran) {
-            this.props.history.push(`/transaction/${this.state.tran.id}/edit`);
-        }
-    }
-
     onDeleteClick() {
-        if (this.state.tran) {
-            API.delete(`/api/v1/transaction/${this.state.tran.id}`)
-                .then((res) => {
-                    alert('Transaction has been deleted');
-                    this.props.history.push('/dashboard');
-                })
-                .catch((err) => console.log(err));
-        }
+        this.props.onTranDelete(this.state.tran, this.props.history);
     }
 
     render() {
@@ -61,13 +49,11 @@ class TransactionDetails extends React.Component<DetailsProps, DetailsState> {
                         <p>Date: {tran.date}</p>
                     </div>
                     {this.state.tran !== undefined ? (
-                        <button>
-                                <Link to={`/transaction/${this.state.tran.id}/edit`}>Edit</Link>
-                        </button>
+                        <Link to={`/dashboard/transaction/${this.state.tran.id}/edit`}>
+                            <button>Edit</button>
+                        </Link>
                         ) : null}
-                    <button onClick={() => this.onDeleteClick()}>
-                        <a href="#">Delete</a>
-                    </button>
+                    <button onClick={() => this.onDeleteClick()}>Delete</button>
                 </div>
             );
         } else {

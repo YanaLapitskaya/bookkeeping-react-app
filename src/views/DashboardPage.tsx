@@ -4,11 +4,16 @@ import Transaction from '../models/Transaction';
 import Card from '../models/Card';
 import API from '../API';
 
+interface DashboardProps {
+    match: any;
+    location: any;
+    history: any;
+}
 interface DashboardState {
     trans: Array<Transaction>;
     cards: Array<Card>;
 }
-export default class DashboardPage extends React.Component<{}, DashboardState> {
+export default class DashboardPage extends React.Component<DashboardProps, DashboardState> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -35,6 +40,7 @@ export default class DashboardPage extends React.Component<{}, DashboardState> {
         });
     }
 
+    /*transactions methods*/
     handleTranAdd(tran: Transaction) {
         API.put('/api/v1/transaction', tran).then((res: any) => {
             if (res.status === 200) {
@@ -54,9 +60,53 @@ export default class DashboardPage extends React.Component<{}, DashboardState> {
         this.changeCardBalance(tran);
     }
 
+    handleTranEdit(tran: Transaction, history: any) {
+        if (!tran) { return; }
+        let tranRq = {
+            title: tran.title,
+            amount: tran.amount,
+            type: tran.type
+        };
+        API.post(`/api/v1/transaction/${tran.id}`, tranRq)
+            .then((res: any) => {
+                if (res.status === 200) {
+                    alert('transaction was undated');
+                    let newTrans = this.state.trans.map((tr) => {
+                        return tr.id === tran.id ? tran : tr;
+                    });
+                    this.setState({
+                        trans: newTrans
+                    });
+                    history.push('/dashboard');
+                }
+            })
+            .catch((err) => {console.log(err); });
+    }
+
+    handleTranDelete(tran: Transaction, history: any) {
+        if (tran) {
+            API.delete(`/api/v1/transaction/${tran.id}`)
+                .then((res) => {
+                    alert('Transaction has been deleted');
+                    let newTrans: Array<Transaction> = [];
+                    this.state.trans.map((el) => {
+                        if (el.id !== tran.id) {
+                            newTrans.push(el);
+                        }
+                    });
+                    this.setState({
+                        trans: newTrans
+                    });
+                    history.push('/dashboard');
+                })
+                .catch((err) => console.log(err));
+        }
+    }
+
+    /*payment card methods*/
     changeCardBalance(tran: Transaction) {
         let card = this.state.cards.filter((c: any) => {return c.id === tran.card; })[0];
-        if (!card) return;
+        if (!card) { return; }
         let newCard = {
             amount: card.amount + tran.amount
         };
@@ -91,6 +141,49 @@ export default class DashboardPage extends React.Component<{}, DashboardState> {
             });
     }
 
+    handleCardEdit(card: Card, history: any) {
+        if (!card) { return; }
+        let cardRq = {
+            number: card.number,
+            paymentSystem: card.paymentSystem,
+            amount: card.amount
+        };
+        API.post(`/api/v1/card/${card.id}`, cardRq)
+            .then((res: any) => {
+                if (res.status === 200) {
+                    alert('Payment card has been updated');
+                    let newCards = this.state.cards.map((el) => {
+                        return el.id === card.id ? card : el;
+                    });
+                    this.setState({
+                        cards: newCards
+                    });
+                    history.push('/dashboard/cards');
+                }
+            })
+            .catch((err) => {console.log(err); });
+    }
+
+    handleCardDelete(card: Card, history: any) {
+        if (card) {
+            API.delete(`/api/v1/card/${card.id}`)
+                .then((res) => {
+                    alert('Payment card has been deleted');
+                    let newCards: Array<Card> = [];
+                    this.state.cards.map((el) => {
+                        if (el.id !== card.id) {
+                            newCards.push(el);
+                        }
+                    });
+                    this.setState({
+                        cards: newCards
+                    });
+                    history.push('/dashboard/cards');
+                })
+                .catch((err) => console.log(err));
+        }
+    }
+
     render() {
         return (
             <div>
@@ -98,7 +191,11 @@ export default class DashboardPage extends React.Component<{}, DashboardState> {
                 <DashboardRouter
                     {...this.state}
                     onTranAdd={(tran: Transaction) => this.handleTranAdd(tran)}
+                    onTranEdit={(tran: Transaction, history: any) => this.handleTranEdit(tran, history)}
+                    onTranDelete={(tran: Transaction, history: any) => this.handleTranDelete(tran, history)}
                     onCardAdd={(card: Card) => this.handleCardAdd(card)}
+                    onCardEdit={(card: Card, history: any ) => this.handleCardEdit(card, history)}
+                    onCardDelete={(card: Card, history: any) => this.handleCardDelete(card, history)}
                 />
             </div>
         );

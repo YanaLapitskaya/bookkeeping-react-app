@@ -14,7 +14,7 @@ export default class CardPanel extends React.Component<PanelProps, {}> {
             <div>
                 <ul className="nav nav-pills">
                     <li className="nav-item">
-                        <Link className="nav-link" to={`/dashboard`}>
+                        <Link className="nav-link" to={`/dashboard/transactions`}>
                             Transactions
                         </Link>
                     </li>

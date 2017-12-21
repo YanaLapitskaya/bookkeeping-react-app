@@ -18,7 +18,7 @@ export default class TransactionPanel extends React.Component<PanelProps, {}> {
                 <ul className="nav nav-pills">
                     <li className="nav-item"><a className="nav-link active" href="#">Transactions</a></li>
                     <li className="nav-item">
-                        <Link className="nav-link" to={`/cards`}>
+                        <Link className="nav-link" to={`/dashboard/cards`}>
                             Payment cards
                         </Link>
                     </li>

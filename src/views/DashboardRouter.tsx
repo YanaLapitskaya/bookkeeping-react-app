@@ -1,6 +1,6 @@
 import * as React from 'react';
 import TransactionPanel from './transaction/TransactionPanel';
-import { Route, Switch } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import TransactionEditPage from './transaction/TransactionEditPage';
 import TransactionDetailsPage from './transaction/TransactionDetailsPage';
@@ -13,7 +13,11 @@ interface RouterProps {
     trans: Array<Transaction>;
     cards: Array<Card>;
     onTranAdd: Function;
+    onTranEdit: Function;
+    onTranDelete: Function;
     onCardAdd: Function;
+    onCardEdit: Function;
+    onCardDelete: Function;
 }
 export default class DashboardRouter extends React.Component<RouterProps, {}> {
     render() {
@@ -22,7 +26,7 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                 <Switch>
                     <Route
                         exact={true}
-                        path="/dashboard"
+                        path="/dashboard/transactions"
                         render={() =>
                             <TransactionPanel
                                 onTranAdd={(tran: Transaction) => this.props.onTranAdd(tran)}
@@ -32,7 +36,7 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                     />
                     <Route
                         exact={true}
-                        path="/cards"
+                        path="/dashboard/cards"
                         render={() =>
                             <CardPanel
                                 onCardAdd={(card: Card) => this.props.onCardAdd(card)}
@@ -41,28 +45,53 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                     />
                     <Route
                         exact={true}
-                        path={`/transaction/:id`}
+                        path={`/dashboard/transaction/:id`}
                         render={
                         ({match: {params: {id}}}) => {
-                            return   <TransactionDetailsPage id={id} match={null} location={null} history={null} />;
+                            return <TransactionDetailsPage
+                                id={id}
+                                onTranDelete={(tran: Transaction, history: any) =>
+                                    this.props.onTranDelete(tran, history)}
+                                match={null}
+                                location={null}
+                                history={null}
+                            />;
                         }}
                     />
                     <Route
                         exact={true}
-                        path={`/transaction/:id/edit`}
+                        path={`/dashboard/transaction/:id/edit`}
                         render={
                         ({match: {params: {id}}}) => {
-                            return <TransactionEditPage id={id} match={null} location={null} history={null} />;
+                            return <TransactionEditPage
+                                id={id}
+                                onTranEdit={(tran: Transaction, history: any) =>
+                                    this.props.onTranEdit(tran, history)}
+                                match={null}
+                                location={null}
+                                history={null}
+                            />;
                         }}
                     />
                     <Route
                         exact={true}
-                        path={`/card/:id`}
+                        path={`/dashboard/card/:id`}
                         render={
                             ({match: {params: {id}}}) => {
-                                return   <CardEditPage id={id} match={null} location={null} history={null} />;
+                                return <CardEditPage
+                                    id={id}
+                                    onCardEdit={(card: Card, history: any) =>
+                                        this.props.onCardEdit(card, history)}
+                                    onCardDelete={(card: Card, history: any) =>
+                                        this.props.onCardDelete(card, history)}
+                                    match={null}
+                                    location={null}
+                                    history={null}
+                                />;
                             }}
                     />
+                    <Redirect exact={true} from="/dashboard" to="/dashboard/transactions" />
+                    <Route exact={true} path="/dashboard/*" render={() =>  <h1>404 not found</h1>} />
                 </Switch>
             </BrowserRouter>
         );

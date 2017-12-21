@@ -56,7 +56,7 @@ class TransactionRow extends React.Component<RowProps, {}> {
                 <td>{card && card.paymentSystem + ': ' + card.number}</td>
                 <td>{card && card.amount}</td>
                 <td>
-                    <Link to={`/transaction/${this.props.tran.id}`}>
+                    <Link to={`/dashboard/transaction/${this.props.tran.id}`}>
                         Details >
                     </Link>
                 </td>

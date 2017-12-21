@@ -5,6 +5,8 @@ import Card from '../../models/Card';
 
 interface EditProps {
     id: string;
+    onCardEdit: Function;
+    onCardDelete: Function;
     match: any;
     location: any;
     history: any;
@@ -40,31 +42,11 @@ class CardEditPage extends React.Component<EditProps, EditState> {
     }
 
     handleSaveClick() {
-        if (!this.state.card) { return; }
-        let card = {
-            number: this.state.card.number,
-            paymentSystem: this.state.card.paymentSystem,
-            amount: this.state.card.amount
-        };
-        API.post(`/api/v1/card/${this.props.id}`, card)
-            .then((res: any) => {
-                if (res.status === 200) {
-                    alert('payment card has been updated');
-                    this.props.history.push('/cards');
-                }
-            })
-            .catch((err) => {console.log(err); });
+        this.props.onCardEdit(this.state.card, this.props.history);
     }
 
     handleDeleteClick() {
-        if (this.state.card) {
-            API.delete(`/api/v1/card/${this.state.card.id}`)
-                .then((res) => {
-                    alert('Payment card has been deleted');
-                    this.props.history.push('/cards');
-                })
-                .catch((err) => console.log(err));
-        }
+        this.props.onCardDelete(this.state.card, this.props.history);
     }
 
     render() {

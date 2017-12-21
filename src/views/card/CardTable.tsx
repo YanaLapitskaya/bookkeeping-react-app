@@ -44,7 +44,7 @@ class CardRow extends React.Component<RowProps, {}> {
                 <td>{this.props.card.paymentSystem}</td>
                 <td>{this.props.card.amount}</td>
                 <td>
-                    <Link to={`/card/${this.props.card.id}`}>Edit</Link>
+                    <Link to={`/dashboard/card/${this.props.card.id}`}>Edit</Link>
                 </td>
             </tr>
         );
