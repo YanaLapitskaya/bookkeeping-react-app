@@ -12,8 +12,10 @@ interface EditProps {
 }
 interface EditState {
     tran: Transaction | undefined;
-    file: string;
-    imagePreviewUrl: string;
+    file: any;
+    title: string;
+    amount: number;
+    type: string;
 
 }
 class TransactionEditPage extends React.Component<EditProps, EditState> {
@@ -21,8 +23,10 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
         super(props);
         this.state = {
             tran: undefined,
-            file: '',
-            imagePreviewUrl: ''
+            file: undefined,
+            title: '',
+            amount: 0,
+            type: ''
         };
     }
 
@@ -36,35 +40,35 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
     }
 
     handleChange(name: String, e: any) {
-        if (!this.state.tran) { return; }
-
         let target = e.target.value;
-        let newTran = this.state.tran;
-        name === 'title' ? (newTran.title = target)
-            : (name === 'amount' ? newTran.amount = target : newTran.type = target);
-        this.setState({tran: newTran});
+        if (name === 'title') {
+            this.setState({title: target});
+        } else if (name === 'amount')  {
+            this.setState({amount: target});
+        } else if (name === 'type') {
+            this.setState({type: target});
+        }
     }
 
-    handleImageChange(e: any) {
-        e.preventDefault();
-
-        let reader = new FileReader();
-        let file = e.target.files[0];
-
-        reader.onloadend = () => {
-            this.setState({
-                file: file,
-                imagePreviewUrl: reader.result
-            });
-        };
-
-        reader.readAsDataURL(file);
+    handleImageChange(files: FileList | null) {
+        if (files) {
+            this.setState({file: files[0]});
+        }
     }
-
     handleClick(e: any) {
         e.preventDefault();
 
-        this.props.onTranEdit(this.state.tran, this.props.history);
+        if (!this.state.tran) {return; }
+
+        let tran = new Transaction(
+            this.state.tran.id,
+            this.state.title,
+            this.state.amount,
+            this.state.type,
+            this.state.tran.date,
+            this.state.tran.card);
+        tran.check = this.state.file;
+        this.props.onTranEdit(tran, this.props.history);
     }
 
     render() {
@@ -76,27 +80,30 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         type="text"
                         className="form-control"
                         name="title"
-                        value={this.state.tran.title}
                         required={true}
+                        defaultValue={this.state.tran.title}
                         onChange={(e) => {this.handleChange('title', e); }}
                     />
                     <input
                         type="text"
                         className="form-control"
                         name="amount"
-                        value={this.state.tran.amount}
                         required={true}
+                        defaultValue={this.state.tran.amount ? this.state.tran.amount.toString() : ''}
                         onChange={(e) => {this.handleChange('amount', e); }}
                     />
                     <input
                         type="text"
                         className="form-control"
                         name="type"
-                        value={this.state.tran.type}
                         required={true}
+                        defaultValue={this.state.tran.type}
                         onChange={(e) => {this.handleChange('type', e); }}
                     />
-                    <input type="file" onChange={(e) => this.handleImageChange(e)} />
+                    <input
+                        type="file"
+                        onChange={(e) => {this.handleImageChange(e.target.files); }}
+                    />
                     <button
                         className="btn btn-lg btn-primary btn-block"
                         onClick={(e) => {this.handleClick(e); }}

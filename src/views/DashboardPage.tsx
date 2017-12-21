@@ -65,7 +65,8 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         let tranRq = {
             title: tran.title,
             amount: tran.amount,
-            type: tran.type
+            type: tran.type,
+            file: tran.check
         };
         API.post(`/api/v1/transaction/${tran.id}`, tranRq)
             .then((res: any) => {

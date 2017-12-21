@@ -5,6 +5,7 @@ export default class Transaction {
     type: string;
     date: string;
     card: string;
+    check: File;
 
     constructor(id: string, title: string, amount: number, type: string, date: string, card: string) {
         let dateObj = new Date(date);
