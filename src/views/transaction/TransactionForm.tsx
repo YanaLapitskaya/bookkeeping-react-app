@@ -39,7 +39,8 @@ export default class TransactionForm extends React.Component<FormProps, FormStat
         }
     }
 
-    handleAdd() {
+    handleAdd(e: any) {
+        e.preventDefault();
         let amount = Number(this.state.sign + this.state.amount);
         let tran = {
             title: this.state.title,
@@ -66,9 +67,14 @@ export default class TransactionForm extends React.Component<FormProps, FormStat
                                 />
                             </div>
                             <div className="col-md-1">
-                                <select id="inputSign" className="form-control">
-                                    <option value="+">+</option>
+                                <select
+                                    id="inputSign"
+                                    className="form-control"
+                                    onChange={(e) => this.handleChange('sign', e)}
+                                >
+                                    <option>?</option>
                                     <option value="-">-</option>
+                                    <option value="+">+</option>
                                 </select>
                             </div>
                             <div className="col-md-2">
@@ -81,8 +87,12 @@ export default class TransactionForm extends React.Component<FormProps, FormStat
                                 />
                             </div>
                             <div className="col-md-2">
-                                <select id="inputState" className="form-control">
-                                    <option>Choose type</option>
+                                <select
+                                    id="inputState"
+                                    className="form-control"
+                                    onChange={(e) => this.handleChange('type', e)}
+                                >
+                                    <option>Type</option>
                                     <option>Food</option>
                                     <option>Clothes</option>
                                     <option>Entertainments</option>
@@ -90,8 +100,12 @@ export default class TransactionForm extends React.Component<FormProps, FormStat
                                 </select>
                             </div>
                             <div className="col-md-2">
-                                <select id="inputState" className="form-control">
-                                    <option>Choose payment card</option>
+                                <select
+                                    id="inputState"
+                                    className="form-control"
+                                    onChange={(e) => this.handleChange('card', e)}
+                                >
+                                    <option>Payment card</option>
                                     {this.props.cards.map(function(card: Card, i: number) {
                                         return(
                                             <option value={card.id} key={i}>
@@ -104,7 +118,7 @@ export default class TransactionForm extends React.Component<FormProps, FormStat
                             <div className="col-md-2">
                                 <button
                                     className="form-group btn btn-primary"
-                                    onClick={() => this.handleAdd()}
+                                    onClick={(e) => this.handleAdd(e)}
                                 >
                                     Add transaction
                                 </button>
