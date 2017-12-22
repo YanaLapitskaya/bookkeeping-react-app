@@ -50,6 +50,7 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                         ({match: {params: {id}}}) => {
                             return <TransactionDetailsPage
                                 id={id}
+                                cards={this.props.cards}
                                 onTranDelete={(tran: Transaction, history: any) =>
                                     this.props.onTranDelete(tran, history)}
                                 match={null}
@@ -65,6 +66,7 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                         ({match: {params: {id}}}) => {
                             return <TransactionEditPage
                                 id={id}
+                                cards={this.props.cards}
                                 onTranEdit={(tran: Transaction, history: any) =>
                                     this.props.onTranEdit(tran, history)}
                                 match={null}

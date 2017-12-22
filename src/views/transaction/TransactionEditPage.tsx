@@ -2,9 +2,11 @@ import * as React from 'react';
 import Transaction from '../../models/Transaction';
 import API from '../../API';
 import { withRouter } from 'react-router';
+import Card from '../../models/Card';
 
 interface EditProps {
     id: number;
+    cards: Array<Card>;
     onTranEdit: Function;
     match: any;
     location: any;
@@ -12,7 +14,8 @@ interface EditProps {
 }
 interface EditState {
     tran: Transaction | undefined;
-    file: any;
+    card: string;
+    file: File | any;
     title: string;
     amount: number;
     type: string;
@@ -23,6 +26,7 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
         super(props);
         this.state = {
             tran: undefined,
+            card: '',
             file: undefined,
             title: '',
             amount: 0,
@@ -34,7 +38,7 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
         API.get(`/api/v1/transaction/${this.props.id}`)
             .then((data: any) => {
                 let trRs = data.transaction;
-                let tran = new Transaction(trRs._id, trRs.title, trRs.amount, trRs.type, trRs.date, trRs.card);
+                let tran = new Transaction(trRs._id, trRs.title, trRs.amount, trRs.type, trRs.date, trRs.card, trRs.check);
                 this.setState({tran: tran});
             });
     }
@@ -47,6 +51,8 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
             this.setState({amount: target});
         } else if (name === 'type') {
             this.setState({type: target});
+        } else if (name === 'card') {
+            this.setState({card: target});
         }
     }
 
@@ -66,15 +72,16 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
             this.state.amount,
             this.state.type,
             this.state.tran.date,
-            this.state.tran.card);
-        tran.check = this.state.file;
+            this.state.card,
+            this.state.file
+            );
         this.props.onTranEdit(tran, this.props.history);
     }
 
     render() {
         if (this.state.tran) {
             return (
-                <div>
+                <div className="wrapper">
                     <h3>Edit transaction details</h3>
                     <input
                         type="text"
@@ -85,7 +92,7 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         onChange={(e) => {this.handleChange('title', e); }}
                     />
                     <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         name="amount"
                         required={true}
@@ -100,6 +107,20 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         defaultValue={this.state.tran.type}
                         onChange={(e) => {this.handleChange('type', e); }}
                     />
+                    <select
+                        id="inputState"
+                        className="form-control"
+                        onChange={(e) => this.handleChange('card', e)}
+                    >
+                        <option>Payment card</option>
+                        {this.props.cards.map(function(card: Card, i: number) {
+                            return(
+                                <option value={card.id} key={i}>
+                                    {card.paymentSystem}: {card.number}
+                                </option>
+                            );
+                        })}
+                    </select>
                     <input
                         type="file"
                         onChange={(e) => {this.handleImageChange(e.target.files); }}

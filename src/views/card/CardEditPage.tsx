@@ -52,7 +52,7 @@ class CardEditPage extends React.Component<EditProps, EditState> {
     render() {
         if (this.state.card) {
             return (
-                <div>
+                <div className="wrapper">
                     <h3>Edit card details</h3>
                     <input
                         type="text"
@@ -74,7 +74,7 @@ class CardEditPage extends React.Component<EditProps, EditState> {
                         <option>Other</option>
                     </select>
                     <input
-                        type="text"
+                        type="number"
                         className="form-control"
                         name="amount"
                         value={this.state.card.amount}

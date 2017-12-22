@@ -26,7 +26,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         API.get('/api/v1/transaction/all').then((data: any) => {
             let trans = data.transactions;
             trans = trans.map((tr: any) => {
-                return new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date, tr.card);
+                return new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date, tr.card, tr.check);
             });
             this.setState({trans: trans});
         });
@@ -53,7 +53,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                 let tr = data.transaction;
                 this.setState({
                     trans: [...this.state.trans,
-                        new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date, tr.card)]
+                        new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date, tr.card,'')]
                 });
             });
 
@@ -62,26 +62,33 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
 
     handleTranEdit(tran: Transaction, history: any) {
         if (!tran) { return; }
-        let tranRq = {
-            title: tran.title,
-            amount: tran.amount,
-            type: tran.type,
-            file: tran.check
-        };
-        API.post(`/api/v1/transaction/${tran.id}`, tranRq)
-            .then((res: any) => {
-                if (res.status === 200) {
-                    alert('transaction was undated');
-                    let newTrans = this.state.trans.map((tr) => {
-                        return tr.id === tran.id ? tran : tr;
-                    });
-                    this.setState({
-                        trans: newTrans
-                    });
-                    history.push('/dashboard');
-                }
-            })
-            .catch((err) => {console.log(err); });
+
+        let formData = new FormData();
+        formData.append('title', tran.title);
+        formData.append('amount', tran.amount.toString());
+        formData.append('type', tran.type);
+        // formData.append('card', this.state.tran.card);
+        formData.append('file', tran.check);
+
+        fetch(`http://localhost:8080/api/v1/transaction/${tran.id}`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json, */*'
+            },
+            body: formData
+        }).then((res: any) => {
+            if (res.status === 200) {
+                alert('transaction was updated');
+                let newTrans = this.state.trans.map((tr) => {
+                    return tr.id === tran.id ? tran : tr;
+                });
+                this.setState({
+                    trans: newTrans
+                });
+                history.push('/dashboard');
+            }
+        });
     }
 
     handleTranDelete(tran: Transaction, history: any) {
