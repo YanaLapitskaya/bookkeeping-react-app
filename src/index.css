@@ -17,3 +17,7 @@ h2{
     margin-bottom: 10px;
 }
 
+input[type="image"]{
+    width: 30px;
+    heigth: 30px;
+}
