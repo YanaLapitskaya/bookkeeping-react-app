@@ -3,6 +3,7 @@ import DashboardRouter from './DashboardRouter';
 import Transaction from '../models/Transaction';
 import Card from '../models/Card';
 import API from '../API';
+import {HOST} from '../Constants';
 
 interface DashboardProps {
     match: any;
@@ -70,7 +71,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         // formData.append('card', this.state.tran.card);
         formData.append('file', tran.check);
 
-        fetch(`http://localhost:8080/api/v1/transaction/${tran.id}`, {
+        fetch(`${HOST}/api/v1/transaction/${tran.id}`, {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -78,8 +79,15 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
             },
             body: formData
         }).then((res: any) => {
-            if (res.status === 200) {
+            if (res.status < 400) {
                 alert('transaction was updated');
+                return res.json();
+            } else {
+                throw {code: res.status.toString()};
+            }
+        })
+            .then((data: any) => {
+                tran.check = data.transaction.check;
                 let newTrans = this.state.trans.map((tr) => {
                     return tr.id === tran.id ? tran : tr;
                 });
@@ -87,8 +95,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                     trans: newTrans
                 });
                 history.push('/dashboard');
-            }
-        });
+            });
     }
 
     handleTranDelete(tran: Transaction, history: any) {

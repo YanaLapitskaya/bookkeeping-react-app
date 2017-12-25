@@ -1,4 +1,4 @@
-const HOST = 'http://localhost:8080';
+import { HOST } from './Constants';
 
 export default class API {
 
