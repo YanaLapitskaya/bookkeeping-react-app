@@ -4,6 +4,7 @@ import API from '../../API';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Card from '../../models/Card';
+import {HOST} from '../../Constants';
 
 interface DetailsProps {
     id: number;
@@ -55,10 +56,10 @@ class TransactionDetails extends React.Component<DetailsProps, DetailsState> {
         let tran = this.state.tran;
         let card = this.state.card;
         if (!tran) { return (<h1>Transaction not found</h1>); }
-        let pathRegEx = /public/i;
+
         let checkPath;
         if (tran.check) {
-            checkPath = tran.check.replace(pathRegEx, '');
+            checkPath = tran.check.replace(/public/i, '');
         }
 
         return (
@@ -81,7 +82,7 @@ class TransactionDetails extends React.Component<DetailsProps, DetailsState> {
                     }
                     <p>Date: {tran.date}</p>
                     {tran.check &&
-                        <img alt="check" style={{width: 200}} src={`http://localhost:8080${checkPath}`}/>
+                        <img alt="check" style={{width: 200}} src={`${HOST}${checkPath}`}/>
                     }
                     </div>
                 {this.state.tran &&

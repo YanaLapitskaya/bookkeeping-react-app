@@ -8,16 +8,21 @@ import CardPanel from './card/CardPanel';
 import CardEditPage from './card/CardEditPage';
 import Transaction from '../models/Transaction';
 import Card from '../models/Card';
+import Saving from '../models/Saving';
+import SavingsPanel from './savings/SavingsPanel';
 
 interface RouterProps {
     trans: Array<Transaction>;
     cards: Array<Card>;
+    savings: Array<Saving>;
     onTranAdd: Function;
     onTranEdit: Function;
     onTranDelete: Function;
     onCardAdd: Function;
     onCardEdit: Function;
     onCardDelete: Function;
+    onSavingAdd: Function;
+    onSavingEdit: Function;
 }
 export default class DashboardRouter extends React.Component<RouterProps, {}> {
     render() {
@@ -91,6 +96,16 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                                     history={null}
                                 />;
                             }}
+                    />
+                    <Route
+                        exact={true}
+                        path="/dashboard/savings"
+                        render={() =>
+                            <SavingsPanel
+                                savings={this.props.savings}
+                                onSavingAdd={this.props.onSavingAdd}
+                                onSavingEdit={this.props.onSavingEdit}
+                            />}
                     />
                     <Redirect exact={true} from="/dashboard" to="/dashboard/transactions" />
                     <Route exact={true} path="/dashboard/*" render={() =>  <h1>404 not found</h1>} />

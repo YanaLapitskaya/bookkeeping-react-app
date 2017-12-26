@@ -39,7 +39,7 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
             .then((data: any) => {
                 let trRs = data.transaction;
                 let tran = new Transaction(trRs._id, trRs.title, trRs.amount, trRs.type, trRs.date, trRs.card, trRs.check);
-                this.setState({tran: tran});
+                this.setState({tran: tran, title: tran.title, amount: tran.amount, type: tran.type});
             });
     }
 
@@ -87,8 +87,8 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         type="text"
                         className="form-control"
                         name="title"
+                        value={this.state.title}
                         required={true}
-                        defaultValue={this.state.tran.title}
                         onChange={(e) => {this.handleChange('title', e); }}
                     />
                     <input
@@ -96,7 +96,7 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         className="form-control"
                         name="amount"
                         required={true}
-                        defaultValue={this.state.tran.amount ? this.state.tran.amount.toString() : ''}
+                        value={this.state.amount}
                         onChange={(e) => {this.handleChange('amount', e); }}
                     />
                     <input
@@ -104,12 +104,13 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                         className="form-control"
                         name="type"
                         required={true}
-                        defaultValue={this.state.tran.type}
+                        value={this.state.type}
                         onChange={(e) => {this.handleChange('type', e); }}
                     />
                     <select
                         id="inputState"
                         className="form-control"
+                        value={this.state.tran.card}
                         onChange={(e) => this.handleChange('card', e)}
                     >
                         <option>Payment card</option>

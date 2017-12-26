@@ -4,8 +4,18 @@ body {
   font-family: sans-serif;
 }
 
+h1{
+    line-height: 70px;
+    margin-top: 30px;
+}
+
 h2{
     line-height: 60px;
+}
+
+h3{
+    line-height: 60px;
+    margin-top: 20px;
 }
 
 .wrapper{

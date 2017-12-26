@@ -2,7 +2,6 @@ export default class Card {
     id: string;
     number: string;
     paymentSystem: string;
-    // paymentSystemLogo: Buffer;
     amount: number;
 
     constructor(id: string, number: string, paymentSystem: string, amount: number) {

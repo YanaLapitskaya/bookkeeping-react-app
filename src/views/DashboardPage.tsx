@@ -2,6 +2,7 @@ import * as React from 'react';
 import DashboardRouter from './DashboardRouter';
 import Transaction from '../models/Transaction';
 import Card from '../models/Card';
+import Saving from '../models/Saving';
 import API from '../API';
 import {HOST} from '../Constants';
 
@@ -13,13 +14,15 @@ interface DashboardProps {
 interface DashboardState {
     trans: Array<Transaction>;
     cards: Array<Card>;
+    savings: Array<Saving>;
 }
 export default class DashboardPage extends React.Component<DashboardProps, DashboardState> {
     constructor(props: any) {
         super(props);
         this.state = {
             trans: [],
-            cards: []
+            cards: [],
+            savings: []
         };
     }
 
@@ -38,6 +41,14 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                 return new Card(c._id, c.number, c.paymentSystem, c.amount);
             });
             this.setState({cards: cards});
+        });
+
+        API.get('/api/v1/saving/all').then((data: any) => {
+            let savings = data.savings;
+            savings = savings.map((s: any) => {
+                return new Saving(s._id, s.title, s.curAmount, s.tarAmount);
+            });
+            this.setState({savings: savings});
         });
     }
 
@@ -123,7 +134,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         let card = this.state.cards.filter((c: any) => {return c.id === tran.card; })[0];
         if (!card) { return; }
         let newCard = {
-            amount: card.amount + tran.amount
+            amount: Number(card.amount) + Number(tran.amount)
         };
         API.post(`/api/v1/card/${tran.card}`, newCard).then((res: any) => {
             if (res.status === 200) {
@@ -199,6 +210,44 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         }
     }
 
+    /*savings methods*/
+    handleSavingAdd(saving: Saving) {
+        API.put('/api/v1/saving', saving).then((res: any) => {
+            if (res.status < 400) {
+                return res.json();
+            } else {
+                throw {code: res.status.toString()};
+            }
+        })
+            .then(data => {
+                let s = data.saving;
+                this.setState({
+                    savings: [...this.state.savings, new Saving(s._id, s.title, s.curAmount, s.tarAmount)]
+                });
+            });
+    }
+
+    handleSavingEdit(id: string, saving: Saving) {
+        if (!saving) { return; }
+        let savingRq = {
+            title: saving.title,
+            curAmount: saving.curAmount,
+            tarAmount: saving.tarAmount
+        };
+        API.post(`/api/v1/saving/${id}`, savingRq)
+            .then((res: any) => {
+                if (res.status === 200) {
+                    let newSavings = this.state.savings.map((el) => {
+                        return el.id === id ? saving : el;
+                    });
+                    this.setState({
+                        savings: newSavings
+                    });
+                }
+            })
+            .catch((err) => {console.log(err); });
+    }
+
     render() {
         return (
             <div>
@@ -211,6 +260,8 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                     onCardAdd={(card: Card) => this.handleCardAdd(card)}
                     onCardEdit={(card: Card, history: any ) => this.handleCardEdit(card, history)}
                     onCardDelete={(card: Card, history: any) => this.handleCardDelete(card, history)}
+                    onSavingAdd={(saving: Saving) => this.handleSavingAdd(saving)}
+                    onSavingEdit={(id:string, saving: Saving) => this.handleSavingEdit(id, saving)}
                 />
             </div>
         );
