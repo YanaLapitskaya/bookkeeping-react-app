@@ -110,7 +110,7 @@ class TransactionEditPage extends React.Component<EditProps, EditState> {
                     <select
                         id="inputState"
                         className="form-control"
-                        value={this.state.tran.card}
+                        value={this.state.card}
                         onChange={(e) => this.handleChange('card', e)}
                     >
                         <option>Payment card</option>
