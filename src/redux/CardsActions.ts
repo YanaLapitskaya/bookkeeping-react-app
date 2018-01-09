@@ -1,6 +1,6 @@
 import Card from '../models/Card';
 import API from '../API';
-import { CARD_ADD, CARD_DELETE, CARD_EDIT, CARDS_SET } from './ActionTypes';
+import {CARD_ADD, CARD_DELETE, CARD_EDIT, CARDS_EDIT_BALANCE, CARDS_SET} from './ActionTypes';
 
 export function actionFetchCards() {
     return (dispatch: any) => {
@@ -80,6 +80,32 @@ export function actionDeleteCard(card: Card) {
                 dispatch({
                     type: CARD_DELETE,
                     payload: card
+                });
+            })
+            .catch(err => {
+                throw new Error(JSON.stringify(err.message || err));
+            });
+    };
+}
+
+export function actionChangeCardBalance(id: String, newAmount: number){
+    return (dispatch: any) => {
+        let reqBody = {
+            amount: newAmount
+        };
+        API.post(`/api/v1/card/${id}`, reqBody)
+            .then((res: any) => {
+                if (res.status === 200) {
+                    return res.json();
+                } else {
+                    throw {code: res.status.toString()};
+                }
+            })
+            .then((data) => {
+                let editedCard = new Card(data.card._id, data.card.number, data.card.paymentSystem, data.card.amount);
+                dispatch({
+                    type: CARDS_EDIT_BALANCE,
+                    payload: editedCard
                 });
             })
             .catch(err => {
