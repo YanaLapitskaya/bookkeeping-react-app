@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Saving from './../../models/Saving';
+import { AppState } from '../../redux/AppState';
+import { connect } from 'react-redux';
+import { actionAddSaving, actionEditSaving, actionFetchSavings, actionSetSavings } from '../../redux/AppActions';
+import { bindActionCreators } from 'redux';
 
 interface SavingsProps {
     savings: Array<Saving>;
-    onSavingAdd: Function;
-    onSavingEdit: Function;
+
+    fetchSavings: Function;
+    setSavings: Function;
+    addSaving: Function;
+    editSaving: Function;
 }
 interface SavingsState {
     id: string;
@@ -13,7 +20,7 @@ interface SavingsState {
     curAmount: number;
     tarAmount: number;
 }
-export default class SavingsPanel extends React.Component<SavingsProps, SavingsState> {
+class SavingsPanel extends React.Component<SavingsProps, SavingsState> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -22,6 +29,10 @@ export default class SavingsPanel extends React.Component<SavingsProps, SavingsS
             curAmount: 0,
             tarAmount: 0
         };
+    }
+
+    componentWillMount() {
+        this.props.fetchSavings(actionSetSavings);
     }
 
     handleChange(stateName: String, e: any) {
@@ -33,14 +44,10 @@ export default class SavingsPanel extends React.Component<SavingsProps, SavingsS
 
     handleAdd(e: any) {
         e.preventDefault();
-        let saving = {
-            title: this.state.title,
-            curAmount: this.state.curAmount,
-            tarAmount: this.state.tarAmount
-        };
-        if (!this.state.id) { this.props.onSavingAdd(saving);
+        let saving = new Saving(this.state.id, this.state.title, this.state.curAmount, this.state.tarAmount);
+        if (!this.state.id) { this.props.addSaving(saving);
         } else {
-            this.props.onSavingEdit(this.state.id, saving);
+            this.props.editSaving(saving);
         }
         this.setState({id: ''});
     }
@@ -121,6 +128,24 @@ export default class SavingsPanel extends React.Component<SavingsProps, SavingsS
     }
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        savings: state.savings
+    };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        fetchSavings: bindActionCreators(actionFetchSavings, dispatch),
+        setSavings: bindActionCreators(actionSetSavings, dispatch),
+        addSaving: bindActionCreators(actionAddSaving, dispatch),
+        editSaving: bindActionCreators(actionEditSaving, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SavingsPanel as any);
+
+//Rows component
 interface RowProps {
     saving: Saving;
     key: Number;

@@ -77,7 +77,9 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
 
         let formData = new FormData();
         formData.append('title', tran.title);
-        formData.append('amount', tran.amount.toString());
+        if (tran.amount) {
+            formData.append('amount', tran.amount.toString());
+        }
         formData.append('type', tran.type);
         // formData.append('card', this.state.tran.card);
         formData.append('file', tran.check);
@@ -210,44 +212,6 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         }
     }
 
-    /*savings methods*/
-    handleSavingAdd(saving: Saving) {
-        API.put('/api/v1/saving', saving).then((res: any) => {
-            if (res.status < 400) {
-                return res.json();
-            } else {
-                throw {code: res.status.toString()};
-            }
-        })
-            .then(data => {
-                let s = data.saving;
-                this.setState({
-                    savings: [...this.state.savings, new Saving(s._id, s.title, s.curAmount, s.tarAmount)]
-                });
-            });
-    }
-
-    handleSavingEdit(id: string, saving: Saving) {
-        if (!saving) { return; }
-        let savingRq = {
-            title: saving.title,
-            curAmount: saving.curAmount,
-            tarAmount: saving.tarAmount
-        };
-        API.post(`/api/v1/saving/${id}`, savingRq)
-            .then((res: any) => {
-                if (res.status === 200) {
-                    let newSavings = this.state.savings.map((el) => {
-                        return el.id === id ? saving : el;
-                    });
-                    this.setState({
-                        savings: newSavings
-                    });
-                }
-            })
-            .catch((err) => {console.log(err); });
-    }
-
     render() {
         return (
             <div>
@@ -260,8 +224,6 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                     onCardAdd={(card: Card) => this.handleCardAdd(card)}
                     onCardEdit={(card: Card, history: any ) => this.handleCardEdit(card, history)}
                     onCardDelete={(card: Card, history: any) => this.handleCardDelete(card, history)}
-                    onSavingAdd={(saving: Saving) => this.handleSavingAdd(saving)}
-                    onSavingEdit={(id:string, saving: Saving) => this.handleSavingEdit(id, saving)}
                 />
             </div>
         );

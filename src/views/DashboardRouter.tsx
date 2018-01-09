@@ -21,8 +21,6 @@ interface RouterProps {
     onCardAdd: Function;
     onCardEdit: Function;
     onCardDelete: Function;
-    onSavingAdd: Function;
-    onSavingEdit: Function;
 }
 export default class DashboardRouter extends React.Component<RouterProps, {}> {
     render() {
@@ -101,11 +99,7 @@ export default class DashboardRouter extends React.Component<RouterProps, {}> {
                         exact={true}
                         path="/dashboard/savings"
                         render={() =>
-                            <SavingsPanel
-                                savings={this.props.savings}
-                                onSavingAdd={this.props.onSavingAdd}
-                                onSavingEdit={this.props.onSavingEdit}
-                            />}
+                            <SavingsPanel/>}
                     />
                     <Redirect exact={true} from="/dashboard" to="/dashboard/transactions" />
                     <Route exact={true} path="/dashboard/*" render={() =>  <h1>404 not found</h1>} />
