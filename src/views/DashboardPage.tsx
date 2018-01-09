@@ -2,27 +2,29 @@ import * as React from 'react';
 import DashboardRouter from './DashboardRouter';
 import Transaction from '../models/Transaction';
 import Card from '../models/Card';
-import Saving from '../models/Saving';
 import API from '../API';
-import {HOST} from '../Constants';
+import { HOST } from '../Constants';
+import { bindActionCreators } from 'redux';
+import { AppState } from '../redux/AppState';
+import { connect } from 'react-redux';
+import { actionAddCard, actionDeleteCard, actionEditCard, actionFetchCards } from '../redux/CardsActions';
 
 interface DashboardProps {
-    match: any;
-    location: any;
-    history: any;
+    cards: Array<Card>;
+
+    fetchCards: Function;
+    addCard: Function;
+    editCard: Function;
+    deleteCard: Function;
 }
 interface DashboardState {
     trans: Array<Transaction>;
-    cards: Array<Card>;
-    savings: Array<Saving>;
 }
-export default class DashboardPage extends React.Component<DashboardProps, DashboardState> {
+class DashboardPage extends React.Component<DashboardProps, DashboardState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            trans: [],
-            cards: [],
-            savings: []
+            trans: []
         };
     }
 
@@ -35,21 +37,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
             this.setState({trans: trans});
         });
 
-        API.get('/api/v1/card/all').then((data: any) => {
-            let cards = data.cards;
-            cards = cards.map((c: any) => {
-                return new Card(c._id, c.number, c.paymentSystem, c.amount);
-            });
-            this.setState({cards: cards});
-        });
-
-        API.get('/api/v1/saving/all').then((data: any) => {
-            let savings = data.savings;
-            savings = savings.map((s: any) => {
-                return new Saving(s._id, s.title, s.curAmount, s.tarAmount);
-            });
-            this.setState({savings: savings});
-        });
+        this.props.fetchCards();
     }
 
     /*transactions methods*/
@@ -65,7 +53,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                 let tr = data.transaction;
                 this.setState({
                     trans: [...this.state.trans,
-                        new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date, tr.card,'')]
+                        new Transaction(tr._id, tr.title, tr.amount, tr.type, tr.date, tr.card, '')]
                 });
             });
 
@@ -133,7 +121,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
 
     /*payment card methods*/
     changeCardBalance(tran: Transaction) {
-        let card = this.state.cards.filter((c: any) => {return c.id === tran.card; })[0];
+        /*let card = this.state.cards.filter((c: any) => {return c.id === tran.card; })[0];
         if (!card) { return; }
         let newCard = {
             amount: Number(card.amount) + Number(tran.amount)
@@ -150,66 +138,23 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                 return (c.id === resCard.id) ? resCard : c;
             });
             this.setState({cards: newCards});
-        });
+        })*/
     }
 
     handleCardAdd(card: Card) {
-        API.put('/api/v1/card', card).then((res: any) => {
-            if (res.status < 400) {
-                return res.json();
-            } else {
-                throw {code: res.status.toString()};
-            }
-        })
-            .then(data => {
-                let c = data.card;
-                this.setState({
-                    cards: [...this.state.cards, new Card(c._id, c.number, c.paymentSystem, c.amount)]
-                });
-            });
+        this.props.addCard(card);
     }
 
     handleCardEdit(card: Card, history: any) {
-        if (!card) { return; }
-        let cardRq = {
-            number: card.number,
-            paymentSystem: card.paymentSystem,
-            amount: card.amount
-        };
-        API.post(`/api/v1/card/${card.id}`, cardRq)
-            .then((res: any) => {
-                if (res.status === 200) {
-                    alert('Payment card has been updated');
-                    let newCards = this.state.cards.map((el) => {
-                        return el.id === card.id ? card : el;
-                    });
-                    this.setState({
-                        cards: newCards
-                    });
-                    history.push('/dashboard/cards');
-                }
-            })
-            .catch((err) => {console.log(err); });
+        this.props.editCard(card);
+        alert('Payment card has been updated');
+        history.push('/dashboard/cards');
     }
 
     handleCardDelete(card: Card, history: any) {
-        if (card) {
-            API.delete(`/api/v1/card/${card.id}`)
-                .then((res) => {
-                    alert('Payment card has been deleted');
-                    let newCards: Array<Card> = [];
-                    this.state.cards.map((el) => {
-                        if (el.id !== card.id) {
-                            newCards.push(el);
-                        }
-                    });
-                    this.setState({
-                        cards: newCards
-                    });
-                    history.push('/dashboard/cards');
-                })
-                .catch((err) => console.log(err));
-        }
+        this.props.deleteCard(card);
+        alert('Payment card has been deleted');
+        history.push('/dashboard/cards');
     }
 
     render() {
@@ -218,6 +163,7 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
                 <h1>Bookkeeping Application</h1>
                 <DashboardRouter
                     {...this.state}
+                    cards={this.props.cards}
                     onTranAdd={(tran: Transaction) => this.handleTranAdd(tran)}
                     onTranEdit={(tran: Transaction, history: any) => this.handleTranEdit(tran, history)}
                     onTranDelete={(tran: Transaction, history: any) => this.handleTranDelete(tran, history)}
@@ -229,3 +175,20 @@ export default class DashboardPage extends React.Component<DashboardProps, Dashb
         );
     }
 }
+
+const mapStateToProps = (state: AppState) => {
+    return {
+        cards: state.cards
+    };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        fetchCards: bindActionCreators(actionFetchCards, dispatch),
+        addCard: bindActionCreators(actionAddCard, dispatch),
+        editCard: bindActionCreators(actionEditCard, dispatch),
+        deleteCard: bindActionCreators(actionDeleteCard, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage as any);

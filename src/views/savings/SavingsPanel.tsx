@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Saving from './../../models/Saving';
 import { AppState } from '../../redux/AppState';
 import { connect } from 'react-redux';
-import { actionAddSaving, actionEditSaving, actionFetchSavings, actionSetSavings } from '../../redux/AppActions';
+import { actionAddSaving, actionEditSaving, actionFetchSavings, actionSetSavings } from '../../redux/SavingsActions';
 import { bindActionCreators } from 'redux';
 
 interface SavingsProps {

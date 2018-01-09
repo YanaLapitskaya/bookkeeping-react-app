@@ -8,13 +8,11 @@ import CardPanel from './card/CardPanel';
 import CardEditPage from './card/CardEditPage';
 import Transaction from '../models/Transaction';
 import Card from '../models/Card';
-import Saving from '../models/Saving';
 import SavingsPanel from './savings/SavingsPanel';
 
 interface RouterProps {
     trans: Array<Transaction>;
     cards: Array<Card>;
-    savings: Array<Saving>;
     onTranAdd: Function;
     onTranEdit: Function;
     onTranDelete: Function;
